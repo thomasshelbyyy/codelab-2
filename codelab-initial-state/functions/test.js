@@ -17,7 +17,7 @@ const path = require("path");
 const TEST_FIREBASE_PROJECT_ID = "test-firestore-rules-project";
 
 // TODO: Change this to your real Firebase Project ID
-const REAL_FIREBASE_PROJECT_ID = "changeme";
+const REAL_FIREBASE_PROJECT_ID = "my-app-2-fd7f3";
 
 const firebase = require("@firebase/rules-unit-testing");
 
@@ -120,11 +120,12 @@ describe("shopping carts", () => {
     // Bob can't read Alice's cart
     await firebase.assertFails(bobDb.doc("carts/alicesCart").get());
   });
+
 });
 
 describe("shopping cart items", async () => {
-  const admin = firebase.initializeAdminApp({ 
-    projectId: TEST_FIREBASE_PROJECT_ID 
+  const admin = firebase.initializeAdminApp({
+    projectId: TEST_FIREBASE_PROJECT_ID
   }).firestore();
 
   const aliceDb = firebase.initializeTestApp({
@@ -145,7 +146,7 @@ describe("shopping cart items", async () => {
       total: 0
     });
 
-    // Create items subcollection in Alice's Cart
+    // Create items subcollection in Adescribe.skiplice's Cart
     const alicesItemsRef = aliceCartRef.collection("items");
     for (const name of Object.keys(seedItems)) {
       await alicesItemsRef.doc(name).set({ value: seedItems[name] });
@@ -164,7 +165,7 @@ describe("shopping cart items", async () => {
     await firebase.assertFails(bobDb.doc("carts/alicesCart/items/milk").get())
   });
 
-  it("can be added only by the cart owner",  async () => {
+  it("can be added only by the cart owner", async () => {
     // Alice can add an item to her own cart
     await firebase.assertSucceeds(aliceDb.doc("carts/alicesCart/items/lemon").set({
       name: "lemon",
@@ -179,9 +180,9 @@ describe("shopping cart items", async () => {
   });
 });
 
-describe.skip("adding an item to the cart recalculates the cart total. ", () => {
-  const admin = firebase.initializeAdminApp({ 
-    projectId: REAL_FIREBASE_PROJECT_ID 
+describe("adding an item to the cart recalculates the cart total. ", () => {
+  const admin = firebase.initializeAdminApp({
+    projectId: REAL_FIREBASE_PROJECT_ID
   }).firestore();
 
   after(async () => {
@@ -194,8 +195,8 @@ describe.skip("adding an item to the cart recalculates the cart total. ", () => 
     }
 
     const db = firebase
-        .initializeAdminApp({ projectId: REAL_FIREBASE_PROJECT_ID })
-        .firestore();
+      .initializeAdminApp({ projectId: REAL_FIREBASE_PROJECT_ID })
+      .firestore();
 
     // Setup: Initialize cart
     const aliceCartRef = db.doc("carts/alice")
@@ -203,7 +204,7 @@ describe.skip("adding an item to the cart recalculates the cart total. ", () => 
 
     //  Trigger `calculateCart` by adding items to the cart
     const aliceItemsRef = aliceCartRef.collection("items");
-    await aliceItemsRef.doc("doc1").set({name: "nectarine", price: 2.99});
+    await aliceItemsRef.doc("doc1").set({ name: "nectarine", price: 2.99 });
     await aliceItemsRef.doc("doc2").set({ name: "grapefruit", price: 6.99 });
 
     // Listen for every update to the cart. Every time an item is added to
@@ -215,7 +216,7 @@ describe.skip("adding an item to the cart recalculates the cart total. ", () => 
         // If the function worked, these will be cart's final attributes.
         const expectedCount = 2;
         const expectedTotal = 9.98;
-  
+
         // When the `itemCount`and `totalPrice` match the expectations for the
         // two items added, the promise resolves, and the test passes.
         if (snap.exists && snap.data().itemCount === expectedCount && snap.data().totalPrice === expectedTotal) {
